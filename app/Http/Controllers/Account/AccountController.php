@@ -26,7 +26,7 @@ class AccountController extends Controller
     
             if (Auth::attempt(["user_name" => $request->user_name, "password" => $request->password, "group_id" => 1])) {
                 $request->session()->put("messenge", ["style" => "success", "msg" => "Đăng nhập quyền quản lý nhà hàng thành công"]);
-                return redirect()->route("home.index");
+                return redirect()->route("menu.index");
             }
             elseif (Auth::attempt(["user_name" => $request->user_name, "password" => $request->password, "group_id" => 2])) {
                 $request->session()->put("messenge", ["style" => "success", "msg" => "Đăng nhập quyền nhân viên thành công"]);
@@ -34,6 +34,11 @@ class AccountController extends Controller
             } 
         }
         $request->session()->put("messenge", ["style" => "danger", "msg" => "Thông tin tài khoản không đúng"]);
+        return redirect()->route("login");
+    }
+
+    public function logout(){
+        Auth::logout();
         return redirect()->route("login");
     }
 }

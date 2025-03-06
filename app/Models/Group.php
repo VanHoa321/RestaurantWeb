@@ -5,24 +5,20 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class AdminMenu extends Model
+class Group extends Model
 {
     use HasFactory;
     protected $fillable = [
         "name",
-        "level",
-        "parent",
-        "order",
-        "icon",
-        "route",
-        "is_active"
+        "description"
     ];
+
     protected $primaryKey = 'id';
-    protected $table = 'admin_menus';
+    protected $table = 'groups';
     public $timestamps = false;
 
-    public function parents()
+    public function roles()
     {
-        return $this->belongsTo(AdminMenu::class, 'parent');
+        return $this->hasMany(Role::class, 'group_id');
     }
 }

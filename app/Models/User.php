@@ -25,8 +25,7 @@ class User extends Authenticatable
         'email_verified_at',
         'password',
         'remember_token',
-        'group_id ',
-        'group_id ',
+        'group_id',
         'last_login',
         'is_active',
         'description'
@@ -53,4 +52,14 @@ class User extends Authenticatable
 
     protected $primaryKey = 'id';
     protected $table = 'users';
+
+    public function group()
+    {
+        return $this->belongsTo(Group::class, 'group_id');
+    }
+
+    public function roles()
+    {
+        return $this->hasManyThrough(Role::class, Group::class, 'id', 'group_id', 'group_id', 'id');
+    }
 }

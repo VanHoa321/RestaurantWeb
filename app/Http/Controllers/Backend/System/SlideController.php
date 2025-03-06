@@ -1,16 +1,17 @@
 <?php
 
-namespace App\Http\Controllers\Manager;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Branch;
 
-class AdminMenuController extends Controller
+class SlideController extends Controller
 {
 
     public function index()
     {
-        //
+        $items = Branch::all();
+        dd($items);
     }
 
     /**

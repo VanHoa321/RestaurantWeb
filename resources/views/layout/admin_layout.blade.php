@@ -28,7 +28,7 @@
     <link href="{{asset("assets/plugins/toastr/toastr.css")}}" rel="stylesheet" />
 </head>
 
-<body class="hold-transition sidebar-mini layout-fixed">
+<body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed">
     <div class="wrapper">
         <div class="preloader flex-column justify-content-center align-items-center" style="z-index: 9999;">
             <img class="animation__shake" src="{{asset("assets/dist/img/AdminLTELogo.png")}}" alt="AdminLTELogo" height="60" width="60">
@@ -43,22 +43,13 @@
                 </li>
             </ul>
 
-            <ul class="navbar-nav ml-auto">
-                @if (Auth::user()->role_id == 2)
-                    <li class="nav-item">
-                        <a class="nav-link" href="#" id="update-reports" data-toggle="modal" data-target="#modal-maintenance">
-                            <i class="fa-regular fa-file" data-toggle="modal" data-target="#modal-maintenance"></i>
-                            <span class="badge badge-danger navbar-badge" id="count-report">{{count(session('reports', []))}}</span>
-                        </a>
-                    </li>
-                @endif
-                <x-notification-report />
+            <ul class="navbar-nav ml-auto">             
                 <li class="nav-item dropdown">
                     <a class="nav-link" data-toggle="dropdown" href="#">
                         <img src="{{Auth::user()->avatar}}" alt="User Avatar" class="img-size-50 mr-3 img-circle" style="margin-top:-8px; width:40px; height:40px">
                     </a>
                     <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                        <span class="dropdown-item dropdown-header text-success">{{Auth::user()->full_name}}</span>
+                        <span class="dropdown-item dropdown-header text-success">{{Auth::user()->name}}</span>
                         <div class="dropdown-divider"></div>
                         <a href="#" class="dropdown-item">
                             <i class="fas fa-envelope mr-3"></i>{{Auth::user()->email}}
@@ -72,7 +63,7 @@
                             <i class="fa-solid fa-cake-candles mr-3"></i>{{ \Carbon\Carbon::parse(Auth::user()->dob)->format('d/m/Y') }}
                         </a>
                         <div class="dropdown-divider"></div>
-                        <a href="{{route("profile")}}" class="dropdown-item dropdown-footer text-primary">Chi tiết</a>
+                        <a href="{{route("menu.index")}}" class="dropdown-item dropdown-footer text-primary">Chi tiết</a>
                         <div class="dropdown-divider"></div>
                         <a href="{{route("logout")}}" class="dropdown-item dropdown-footer text-danger">Đăng xuất</a>
                     </div>
@@ -93,7 +84,7 @@
 
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
             <a href="#" class="brand-link text-center">
-                <span class="brand-text font-weight-light text-info font-weight-bold text-uppercase">{{Auth::user()->role->name}}</span>
+                <span class="brand-text font-weight-light text-info font-weight-bold text-uppercase">{{Auth::user()->group->name}}</span>
             </a>
             <div class="sidebar">
                 <div class="user-panel mt-3 pb-3 mb-3 d-flex">
@@ -101,57 +92,14 @@
                         <img src="{{Auth::user()->avatar}}" class="img-circle elevation-2" alt="User Image">
                     </div>
                     <div class="info">
-                        <a href="{{route("profile")}}" class="d-block">{{Auth::user()->full_name}}</a>
+                        <a href="{{route("menu.index")}}" class="d-block">{{Auth::user()->name}}</a>
                     </div>
                 </div>
-                <x-admin-menu />
+                <x-admin-menu-component />
             </div>
         </aside>
         @yield('content')
         <aside class="control-sidebar control-sidebar-dark"></aside>
-        <!--modal -->
-        <div class="modal fade" id="modal-maintenance">
-            <div class="modal-dialog modal-xl">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title">Chi tiết biên bản bảo trì</h4>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
-                        <section class="content">
-                            <div class="container-fluid">
-                                <div class="row">
-                                    <div class="col-12">
-                                        <div class="card">                                            
-                                            <div class="card-body">
-                                                <table id="example-table-2" class="table table-bordered table-hover">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>#</th>
-                                                            <th style="width:15%">Hình ảnh</th>
-                                                            <th style="width:40%">Tên thiết bị</th>
-                                                            <th>Số hiệu</th>
-                                                            <th>Thuộc bộ phận</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody id="report-table-body"></tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </div>                               
-                                </div>
-                            </div>
-                        </section>
-                    </div>
-                    <div class="modal-footer justify-content-between">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- /.modal -->
     </div>
     <script src="{{asset("assets/plugins/jquery/jquery.min.js")}}"></script>
     <script src="{{asset("assets/plugins/jquery-ui/jquery-ui.min.js")}}"></script>
@@ -173,6 +121,7 @@
     <script src="{{asset("assets/plugins/dropzone/min/dropzone.min.js")}}"></script>
     <script src="{{asset("assets/dist/js/demo.js")}}"></script>
     <script src="{{asset("assets/dist/js/pages/dashboard.js")}}"></script>
+    <script src="{{asset("assets/plugins/bs-custom-file-input/bs-custom-file-input.min.js")}}"></script>
     <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap4.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -197,73 +146,8 @@
                 },
             });
         });
-
-        $(function() {
-            $('#example-table-2').DataTable({
-                pageLength: 10,
-                language: {
-                    "lengthMenu": "Hiển thị _MENU_ mục",
-                    "search": "Tìm kiếm:",
-                    "zeroRecords": "Không tìm thấy dữ liệu",
-                    "info": "Hiển thị từ _START_ đến _END_ của _TOTAL_ mục",
-                    "infoEmpty": "Hiển thị từ 0 đến 0 của 0 mục",
-                    "infoFiltered": "(được lọc từ _MAX_ tổng số mục)",
-                    "paginate": {
-                        "first": "Đầu",
-                        "last": "Cuối",
-                        "next": "Tiếp",
-                        "previous": "Trước"
-                    }
-                },
-                lengthMenu: [2, 5, 10, 25, 50, 100],
-                pageLength: 2
-            });
-        });
-
-        $(function() {
-            $('#example-table-3').DataTable({
-                pageLength: 10,
-                language: {
-                    "lengthMenu": "Hiển thị _MENU_ mục",
-                    "search": "Tìm kiếm:",
-                    "zeroRecords": "Không tìm thấy dữ liệu",
-                    "info": "Hiển thị từ _START_ đến _END_ của _TOTAL_ mục",
-                    "infoEmpty": "Hiển thị từ 0 đến 0 của 0 mục",
-                    "infoFiltered": "(được lọc từ _MAX_ tổng số mục)",
-                    "paginate": {
-                        "first": "Đầu",
-                        "last": "Cuối",
-                        "next": "Tiếp",
-                        "previous": "Trước"
-                    }
-                },
-                lengthMenu: [5, 10, 25, 50, 100],
-                pageLength: 5
-            });
-        });
-
-        $(function() {
-            $('#example-table-4').DataTable({
-                pageLength: 10,
-                language: {
-                    "lengthMenu": "Hiển thị _MENU_ mục",
-                    "search": "Tìm kiếm:",
-                    "zeroRecords": "Không tìm thấy dữ liệu",
-                    "info": "Hiển thị từ _START_ đến _END_ của _TOTAL_ mục",
-                    "infoEmpty": "Hiển thị từ 0 đến 0 của 0 mục",
-                    "infoFiltered": "(được lọc từ _MAX_ tổng số mục)",
-                    "paginate": {
-                        "first": "Đầu",
-                        "last": "Cuối",
-                        "next": "Tiếp",
-                        "previous": "Trước"
-                    }
-                },
-                lengthMenu: [2, 5, 10, 25, 50, 100],
-                pageLength: 2
-            });
-        });
     </script>
+
     <script src="/vendor/laravel-filemanager/js/stand-alone-button.js"></script>
     <script>
         $('#lfm').filemanager('file', {
@@ -332,44 +216,6 @@
             });
         });
     </script>
-    <script>
-        function updateReportTable() {
-            $.ajax({
-                url: '/use-unit/get-reports',
-                method: 'GET',
-                success: function(response) {
-                    const reports = response.reports;
-                    var table = $('#example-table-2').DataTable();
-                    table.clear();
-                    let counter = 1;
-                    $.each(reports, function(id, items) {
-                        table.row.add([
-                            `<td style="text-align: center; vertical-align: middle">${counter++}</td>`,
-                            `<td style="width: 15%; text-align: center; vertical-align: middle"><img src="${items.image}" alt="" style="width: 80px; height: 80px"></td>`, // Hình ảnh
-                            `<td style="width: 30%; text-align: center; vertical-align: middle">${items.name}</td>`,
-                            `<td style="text-align: center; vertical-align: middle">${items.code}</td>`,
-                            `<td style="text-align: center; vertical-align: middle">${items.unit}</td>`,
-                        ]).draw(false);
-                    });
-                    table.draw();
-                },
-                error: function() {
-                    alert('Có lỗi xảy ra khi tải danh sách thiết bị.');
-                }
-            });
-        }
-
-        $(document).ready(function() {
-            $('#update-reports').click(function() {
-                updateReportTable();
-            });
-           
-            setTimeout(function() {
-                $("#myAlert").fadeOut(500);
-            }, 3500);
-        })
-    </script>
     @yield('scripts')
 </body>
-
 </html>
