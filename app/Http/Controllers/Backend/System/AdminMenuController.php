@@ -86,7 +86,7 @@ class AdminMenuController extends Controller
 
     public function update(Request $request, $id)
     {
-        $validator = $this->validates($request);
+        $validator = $this->validates($request, $id);
         if ($validator->fails()) {
             return back()->withErrors($validator)->withInput();
         }

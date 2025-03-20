@@ -5,13 +5,11 @@
             <section class="content-header">
                 <div class="container-fluid">
                     <div class="row mb-2">
-                        <div class="col-sm-6">
-                        </div>
-                        <div class="col-sm-6">
-                            <ol class="breadcrumb float-sm-right">
-                                <li class="breadcrumb-item">Quản lý người dùng</li>
-                                <li class="breadcrumb-item active">Phân quyền người dùng</li>
-                            </ol>
+                        <div class="col-sm-6">         
+                            <ol class="breadcrumb float-sm-left">
+                                <li class="breadcrumb-item"><a href="{{ route('group.index') }}" class="text-info">Phân quyền người dùng</a></li>
+                                <li class="breadcrumb-item active">Chi tiết phân quyền</li>
+                            </ol>               
                         </div>
                     </div>
                 </div>

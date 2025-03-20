@@ -5,6 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Đăng nhập</title>
+    <link rel="shortcut icon" href="{{asset("assets-web/img/favicon.png")}}">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{asset("assets/plugins/icheck-bootstrap/icheck-bootstrap.min.css")}}">
@@ -52,13 +53,21 @@
                         </div>
                     </div>
                     <div class="row">
+                        <div class="col-md-12">
+                            <div class="icheck-info mb-3">
+                                <input type="checkbox" id="remember" name="remember">
+                                <label for="remember" style="font-weight: normal;">Ghi nhớ đăng nhập</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
                         <div class="col-12">
                             <button type="submit" class="btn btn-primary btn-block"><i class="fa-solid fa-right-to-bracket"></i> Đăng nhập</button>
                         </div>
                     </div>
                 </form>
                 <div class="social-auth-links text-center mt-2 mb-3">                   
-                    <a href="#" class="btn btn-block btn-danger">
+                    <a href="{{ route("password.request") }}" class="btn btn-block btn-danger">
                         <i class="fa-solid fa-question"></i> Quên mật khẩu
                     </a>
                 </div>

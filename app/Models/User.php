@@ -26,6 +26,7 @@ class User extends Authenticatable
         'password',
         'remember_token',
         'group_id',
+        'branch_id',
         'last_login',
         'is_active',
         'description'
@@ -56,6 +57,11 @@ class User extends Authenticatable
     public function group()
     {
         return $this->belongsTo(Group::class, 'group_id');
+    }
+
+    public function branch()
+    {
+        return $this->belongsTo(Branch::class, 'branch_id');
     }
 
     public function roles()

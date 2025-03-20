@@ -5,8 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield(section: 'title')</title>
-
+    <title>Restaurant</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
@@ -30,23 +29,20 @@
 
 <body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed">
     <div class="wrapper">
-        <div class="preloader flex-column justify-content-center align-items-center" style="z-index: 9999;">
+        <!-- <div class="preloader flex-column justify-content-center align-items-center" style="z-index: 9999;">
             <img class="animation__shake" src="{{asset("assets/dist/img/AdminLTELogo.png")}}" alt="AdminLTELogo" height="60" width="60">
-        </div>
+        </div> -->
         <nav class="main-header navbar navbar-expand navbar-white navbar-light">
             <ul class="navbar-nav">
                 <li class="nav-item">
                     <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
-                </li>
-                <li class="nav-item d-none d-sm-inline-block">
-                    <a href="#" class="nav-link">@yield(section: 'title')</a>
                 </li>
             </ul>
 
             <ul class="navbar-nav ml-auto">             
                 <li class="nav-item dropdown">
                     <a class="nav-link" data-toggle="dropdown" href="#">
-                        <img src="{{Auth::user()->avatar}}" alt="User Avatar" class="img-size-50 mr-3 img-circle" style="margin-top:-8px; width:40px; height:40px">
+                        <img src="{{(Auth::user()->avatar ? Auth::user()->avatar : "http://127.0.0.1:8000/storage/files/1/Avatar/user2-160x160.jpg")}}" alt="User Avatar" class="img-size-50 mr-3 img-circle" style="margin-top:-8px; width:40px; height:40px">
                     </a>
                     <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
                         <span class="dropdown-item dropdown-header text-success">{{Auth::user()->name}}</span>
@@ -63,7 +59,7 @@
                             <i class="fa-solid fa-cake-candles mr-3"></i>{{ \Carbon\Carbon::parse(Auth::user()->dob)->format('d/m/Y') }}
                         </a>
                         <div class="dropdown-divider"></div>
-                        <a href="{{route("menu.index")}}" class="dropdown-item dropdown-footer text-primary">Chi tiết</a>
+                        <a href="{{route("profile")}}" class="dropdown-item dropdown-footer text-info">Chi tiết</a>
                         <div class="dropdown-divider"></div>
                         <a href="{{route("logout")}}" class="dropdown-item dropdown-footer text-danger">Đăng xuất</a>
                     </div>
@@ -89,10 +85,10 @@
             <div class="sidebar">
                 <div class="user-panel mt-3 pb-3 mb-3 d-flex">
                     <div class="image">
-                        <img src="{{Auth::user()->avatar}}" class="img-circle elevation-2" alt="User Image">
+                        <img src="{{(Auth::user()->avatar ? Auth::user()->avatar : "http://127.0.0.1:8000/storage/files/1/Avatar/user2-160x160.jpg")}}" class="img-circle elevation-2" alt="User Image">
                     </div>
                     <div class="info">
-                        <a href="{{route("menu.index")}}" class="d-block">{{Auth::user()->name}}</a>
+                        <a href="{{route("profile")}}" class="d-block">{{Auth::user()->name}}</a>
                     </div>
                 </div>
                 <x-admin-menu-component />
@@ -130,6 +126,8 @@
         $(function() {
             $('#example-table').DataTable({
                 pageLength: 10,
+
+                scrollCollapse: true,
                 language: {
                     "lengthMenu": "Hiển thị _MENU_ mục",
                     "search": "Tìm kiếm:",
@@ -144,6 +142,52 @@
                         "previous": "Trước"
                     }
                 },
+                lengthMenu: [5, 10, 25, 50, 100],
+                pageLength: 5
+            });
+
+            $('#example-table-2').DataTable({
+                pageLength: 10,
+                language: {
+                    "lengthMenu": "Hiển thị _MENU_ mục",
+                    "search": "Tìm kiếm:",
+                    "zeroRecords": "Không tìm thấy dữ liệu",
+                    "info": "Hiển thị từ _START_ đến _END_ của _TOTAL_ mục",
+                    "infoEmpty": "Hiển thị từ 0 đến 0 của 0 mục",
+                    "infoFiltered": "(được lọc từ _MAX_ tổng số mục)",
+                    "paginate": {
+                        "first": "Đầu",
+                        "last": "Cuối",
+                        "next": "Tiếp",
+                        "previous": "Trước"
+                    }
+                },
+                lengthMenu: [2, 5, 10, 25, 50, 100],
+                pageLength: 2
+            });
+
+            $('#example-table-3').DataTable({
+                paging: false,
+                ordering: true,
+                searching: true,
+                info: false,
+                scrollY: "200px",
+                scrollCollapse: true,
+                language: {
+                    "search": "Tìm kiếm:",
+                    "zeroRecords": "Vui lòng chọn thêm mặt hàng trước khi cập nhật <br> <i style='font-size:44px; margin-top:12px' class='fa-solid fa-mug-saucer'></i>"
+                }
+            });
+
+            $('#example-table-4').DataTable({
+                paging: false,
+                ordering: true,
+                searching: true,
+                info: false,
+                language: {
+                    "search": "Tìm kiếm:",
+                    "zeroRecords": "Không tìm thấy mặt hàng liên quan"
+                }
             });
         });
     </script>
@@ -168,7 +212,7 @@
                     click: function() {
 
                         lfm({
-                            type: 'image',
+                            type: 'file',
                             prefix: '/files-manager'
                         }, function(lfmItems, path) {
                             lfmItems.forEach(function(lfmItem) {
@@ -182,9 +226,11 @@
             };
 
             $('#summernote').summernote({
+                height: 300,
                 toolbar: [
                     ['style', ['style']],
                     ['font', ['bold', 'italic', 'underline', 'clear']],
+                    ['fontsize', ['fontsize']],
                     ['fontname', ['fontname']],
                     ['color', ['color']],
                     ['para', ['ul', 'ol', 'paragraph', 'height', 'table']],
@@ -201,7 +247,7 @@
             if (initialUrl) {
                 $('#holder').attr('src', initialUrl);
             } else {
-                $('#holder').attr('src', '/storage/photos/1/Device/no-image.jpg');
+                $('#holder').attr('src', '/storage/files/1/Item/no-image.jpg');
             }
             $('#lfm').filemanager('file');//đổi qua file nếu muốn upload video
             $('#lfm').on('click', function() {

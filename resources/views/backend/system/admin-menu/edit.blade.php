@@ -1,18 +1,14 @@
 @extends('layout/admin_layout')
-    @section('title', 'Chỉnh sửa Menu')
-    @section('content')
-
+@section('content')
     <div class="content-wrapper">
         <section class="content-header">
             <div class="container-fluid">
                 <div class="row mb-2">
-                    <div class="col-sm-6">
-                    </div>
-                    <div class="col-sm-6">
-                        <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item"><a href="{{ route("admin-menu.index") }}">Quản lý Menu</a></li>
+                    <div class="col-sm-6">         
+                        <ol class="breadcrumb float-sm-left">
+                            <li class="breadcrumb-item"><a href="{{ route('admin-menu.index') }}" class="text-info">Quản lý Menu</a></li>
                             <li class="breadcrumb-item active">Chỉnh sửa Menu</li>
-                        </ol>
+                        </ol>               
                     </div>
                 </div>
             </div>
@@ -33,7 +29,7 @@
                     <div class="col-md-12">
                         <div class="card card-info">
                             <div class="card-header">
-                                <h3 class="card-title">Chỉnh sửa Menu</h3>                               
+                                <h3 class="card-title">Điền các trường dữ liệu</h3>                                  
                             </div>
                             <form method="post" action="{{route("admin-menu.update", $edit->id)}}" id="quickForm">
                                 @csrf

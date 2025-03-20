@@ -29,6 +29,9 @@ class CheckPermission
         if (!$menu) {
             $baseRoute = explode('.', $currentRoute)[0];
             $menu = AdminMenu::where('route', 'LIKE', "%$baseRoute%")->first();
+            if (!$menu) {
+                $menu = AdminMenu::where('id', 8)->first();
+            }
         }
 
         $parentMenuId = ($menu->parent == 0) ? $menu->id : $menu->parent;
