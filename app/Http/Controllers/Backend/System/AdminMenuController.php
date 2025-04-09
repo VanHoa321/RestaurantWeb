@@ -73,7 +73,7 @@ class AdminMenuController extends Controller
         $create = new AdminMenu();
         $create->create($data);
         $request->session()->put("messenge", ["style"=>"success","msg"=>"Thêm mới Menu thành công"]);
-        return redirect()->route("menu.index");
+        return redirect()->route("admin-menu.index");
     }
 
     public function edit($id)
@@ -102,7 +102,7 @@ class AdminMenuController extends Controller
         $edit = AdminMenu::where('id', $id)->first();
         $edit->update($data);
         $request->session()->put("messenge", ["style"=>"success","msg"=>"Cập nhật Menu thành công"]);
-        return redirect()->route("menu.index");
+        return redirect()->route("admin-menu.index");
     }
 
     public function destroy(string $id)

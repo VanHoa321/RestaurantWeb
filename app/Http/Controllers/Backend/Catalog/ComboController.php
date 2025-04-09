@@ -7,6 +7,7 @@ use App\Models\Combo;
 use App\Models\ComboItem;
 use App\Models\Item;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class ComboController extends Controller
@@ -57,6 +58,7 @@ class ComboController extends Controller
             "price" => $request->price,
             "cost_price" => $request->cost_price,
             "avatar" => $request->avatar ? $request->avatar : "/storage/files/1/Item/no-image.jpg",
+            "description" => $request->description
         ];
         $combo = Combo::create($comboData);
         foreach ($request->items as $item) {
@@ -91,6 +93,7 @@ class ComboController extends Controller
             "price" => $request->price,
             "cost_price" => $request->cost_price,
             "avatar" => $request->avatar ? $request->avatar : "/storage/files/1/Item/no-image.jpg",
+            "description" => $request->description
         ];
         $combo = Combo::findOrFail($id);
         $combo->update($comboData);

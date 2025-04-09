@@ -2641,6 +2641,37 @@ progress {
   text-overflow: ellipsis;
 }
 
+.cart-container {
+    display: flex;
+        align-items: center;
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        overflow: hidden;
+        width: 90px;
+        margin: 0 auto;
+    }
+
+    .cart-container button {
+        width: 30px;
+        height: 30px;
+        border: none;
+        font-size: 20px;
+        cursor: pointer;
+    }
+
+    .cart-container button:hover {
+        background-color: #e0e0e0;
+    }
+
+    .cart-container .cart-input {
+        width: 30px;
+        height: 30px;
+        text-align: center;
+        border: none;
+        font-size: 13px;
+        font-weight: bold;
+        background-color: #fff;
+    }
 .col-form-label-lg {
   padding-top: calc(0.5rem + 1px);
   padding-bottom: calc(0.5rem + 1px);

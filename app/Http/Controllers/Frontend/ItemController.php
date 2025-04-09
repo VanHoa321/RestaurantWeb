@@ -48,7 +48,7 @@ class ItemController extends Controller
                 $query->whereBetween("sale_price", [$min_price, $max_price]);
             });
         
-            $menuItemsQuery->orderBy("created_at", "desc");
+            $menuItemsQuery->orderBy("created_at", "asc");
             $menuItemsCount = $menuItemsQuery->count();
         }
 
@@ -87,6 +87,40 @@ class ItemController extends Controller
             "last_page" => $lastPage,
             "prev_page_url" => $currentPage > 1 ? url()->current() . "?page=" . ($currentPage - 1) : null,
             "next_page_url" => $currentPage < $lastPage ? url()->current() . "?page=" . ($currentPage + 1) : null
+        ]);
+    }
+
+    public function getItem($id)
+    {
+        $item = Item::with("category", "activePrice")->where("id", $id)->first();
+        if(!$item)
+        {
+            return response()->json([
+                "success" => false,
+                "message" => "Không tìm thấy sản phẩm này"
+            ]);
+        }
+
+        return response()->json([
+            "success" => true,
+            "item" => $item
+        ]);
+    }
+
+    public function getCombo($id)
+    {
+        $combo = Combo::find($id);
+        if(!$combo)
+        {
+            return response()->json([
+                "success" => false,
+                "message" => "Không tìm thấy combo này"
+            ]);
+        }
+
+        return response()->json([
+            "success" => true,
+            "combo" => $combo
         ]);
     }
 }

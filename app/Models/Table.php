@@ -29,4 +29,9 @@ class Table extends Model
     {
         return $this->belongsTo(TableType::class, 'type_id');
     }
+
+    public function bookings()
+    {
+        return $this->hasMany(Booking::class, 'table_id');
+    }
 }

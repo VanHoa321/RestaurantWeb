@@ -18,10 +18,6 @@ class AccountController extends Controller
         $user = User::where('user_name', $request->user_name)->first();
         $remember = $request->has('remember');
         if ($user) {
-            if (is_null($user->email_verified_at)) {
-                $request->session()->put("messenge", ["style" => "danger", "msg" => "Tài khoản chưa được xác minh"]);
-                return redirect()->route("login");
-            }
             if ($user->is_active == 0) {
                 $request->session()->put("messenge", ["style" => "danger", "msg" => "Tài khoản của bạn đã bị khóa"]);
                 return redirect()->route("login");
@@ -30,12 +26,12 @@ class AccountController extends Controller
             if (Auth::attempt(["user_name" => $request->user_name, "password" => $request->password, "group_id" => 1], $remember)) {
                 $user->update(['last_login' => now()]);
                 $request->session()->put("messenge", ["style" => "success", "msg" => "Đăng nhập quyền quản lý nhà hàng thành công"]);
-                return redirect()->route("menu.index");
+                return redirect()->route("inv-present.index");
             }
             elseif (Auth::attempt(["user_name" => $request->user_name, "password" => $request->password, "group_id" => 2], $remember)) {
                 $user->update(['last_login' => now()]);
                 $request->session()->put("messenge", ["style" => "success", "msg" => "Đăng nhập quyền nhân viên thành công"]);
-                return redirect()->route("homeT.index");
+                return redirect()->route("inv-present.index");
             } 
         }
         $request->session()->put("messenge", ["style" => "danger", "msg" => "Thông tin tài khoản không đúng"]);
@@ -44,7 +40,7 @@ class AccountController extends Controller
 
     public function logout(){
         Auth::logout();
-        return redirect()->route("login");
+        return redirect()->route("home.index");
     }
 
     public function profile(){

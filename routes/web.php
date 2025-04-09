@@ -5,8 +5,15 @@ use App\Http\Controllers\backend\item\UnitController;
 use App\Http\Controllers\backend\restaurant\BlogCategoryController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Account\AccountController;
+use App\Http\Controllers\account\CustomerAccountController;
 use App\Http\Controllers\account\ForgotPasswordController;
+use App\Http\Controllers\backend\booking\BookingHistoryController;
+use App\Http\Controllers\Backend\booking\PresentController;
+use App\Http\Controllers\Backend\booking\TableDiaController;
 use App\Http\Controllers\backend\catalog\ComboController;
+use App\Http\Controllers\backend\customer\CustomerController;
+use App\Http\Controllers\backend\invoice\InvoiceController;
+use App\Http\Controllers\backend\invoice\InvoiceHistoryController;
 use App\Http\Controllers\backend\item\ItemCategoryController;
 use App\Http\Controllers\backend\item\ItemController;
 use App\Http\Controllers\backend\item\ItemPriceController;
@@ -22,8 +29,11 @@ use App\Http\Controllers\Backend\User\GroupController;
 use App\Http\Controllers\frontend\ContactController;
 use App\Http\Controllers\frontend\HomeController;
 use App\Http\Controllers\backend\system\SlideController;
+use App\Http\Controllers\backend\user\UserController;
 use App\Http\Controllers\frontend\BlogController as FrontendBlogController;
+use App\Http\Controllers\frontend\CartController;
 use App\Http\Controllers\frontend\ItemController as FrontendItemController;
+use App\Http\Controllers\frontend\OrderController;
 use App\Http\Controllers\frontend\ResInfoController as FrontendResInfoController;
 use UniSharp\LaravelFilemanager\Lfm;
 
@@ -37,16 +47,40 @@ Route::group(['prefix' => 'files-manager'], function () {
 Route::get('/home', [HomeController::class, 'index'])->name('home.index');
 Route::get('/contact', [ContactController::class, 'index'])->name('contact.index');
 Route::get('/info', [FrontendResInfoController::class, 'index'])->name('info.index');
+
+//Frontend Item
 Route::get('/item', [FrontendItemController::class, 'index'])->name('ft-item.index');
 Route::get('/getData', [FrontendItemController::class, 'getData']);
+Route::get('/getItem/{id}', [FrontendItemController::class, 'getItem']);
+Route::get('/getCombo/{id}', [FrontendItemController::class, 'getCombo']);
+
+//Frontend Blog
 Route::get('/blog', [FrontendBlogController::class, 'index'])->name('ft-blog.index');
 Route::get('/blog-getData', [FrontendBlogController::class, 'getData']);
 Route::get('/blog/detail/{id}', [FrontendBlogController::class, 'detail'])->name('ft-blog.detail');
 
+//Cart
+Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+Route::post('/cart/add', [CartController::class, 'addToCart'])->name('cart.add');
+Route::post('/cart/update', [CartController::class, 'updateCart'])->name('cart.update');
+Route::post('/cart/remove', [CartController::class, 'removeFromCart'])->name('cart.remove');
+Route::get('/cart/clear', [CartController::class, 'clearCart'])->name('cart.clear');
+Route::get('/cart/get', [CartController::class, 'getCart'])->name('cart.get');
+
+//Order
+Route::get('/order', [OrderController::class, 'index'])->name('order.index');
+Route::post('/vnpay_payment', [OrderController::class, 'vnpay_payment'])->name('vnpay_payment');
+Route::get('/vnpay-return', [OrderController::class, 'vnpayReturn'])->name('vnpay.return');
+Route::get('/booking-success', [OrderController::class, 'bookingSuccess']);
 //Account
 Route::get('/login', [AccountController::class, 'login'])->name('login');
 Route::post('/login', [AccountController::class, 'postLogin'])->name('postLogin');
 Route::get('/logout', [AccountController::class, 'logout'])->name('logout');
+
+//Customer Account
+Route::get('/google/redirect', [CustomerAccountController::class, 'redirectToGoogle'])->name('google.redirect');
+Route::get('/google/callback', [CustomerAccountController::class, 'handleGoogleCallback'])->name('google.callback');
+Route::get('/cus-logout', [CustomerAccountController::class, 'logout'])->name('cus.logout');
 
 //Reset Password
 Route::get('/forgot-password', [ForgotPasswordController::class, 'showForgotPasswordForm'])->name('password.request');
@@ -98,6 +132,28 @@ Route::prefix('user')->middleware('role')->group(function () {
         Route::post('/update/{id}', [GroupController::class, 'update'])->name('group.update');
         Route::get('/role/{id}', [GroupController::class, 'role'])->name('group.role');
         Route::post('/update-roles/{id}', [GroupController::class, 'updateRoles'])->name('group.updateRoles');
+    });
+
+    //List User
+    Route::prefix('list')->group(function () {
+        Route::get('/index', [UserController::class, 'index'])->name('user.index');
+        Route::get('/create', [UserController::class, 'create'])->name('user.create');
+        Route::post('/store', [UserController::class, 'store'])->name('user.store');
+        Route::get('/show/{id}', [UserController::class, 'show'])->name("user.show");
+        Route::post('/change/{id}', [UserController::class, 'changeActive']);
+    });
+});
+
+Route::prefix('customer')->middleware('role')->group(function () {
+    //customer
+    Route::prefix('list')->group(function () {
+        Route::get('/index', [CustomerController::class, 'index'])->name('customer.index');
+        Route::get('/create', [CustomerController::class, 'create'])->name('customer.create');
+        Route::post('/store', [CustomerController::class, 'store'])->name('customer.store');
+        Route::get('/edit/{id}', [CustomerController::class, 'edit'])->name('customer.edit');
+        Route::post('/update/{id}', [CustomerController::class, 'update'])->name('customer.update');
+        Route::delete('/destroy/{id}', [CustomerController::class, 'destroy']);
+        Route::post('/change/{id}', [CustomerController::class, 'changeActive']);
     });
 });
 
@@ -245,5 +301,48 @@ Route::prefix('restaurant')->middleware('role')->group(function () {
     });
 });
 
+Route::prefix('booking')->middleware('role')->group(function () {
 
+    Route::prefix('present')->group(function () {
+        Route::get('/index', [PresentController::class, 'index'])->name('present.index');
+        Route::get('/table-arrangement/{id}', [PresentController::class, 'tableArrangement'])->name('present.table');
+        Route::get('/post-arrangement/{id}/{table_id}', [PresentController::class, 'postArrangement'])->name('post.table');
+        Route::post('/cancel/{id}', [PresentController::class, 'cancelBooking'])->name("present.cancelBooking");
+        Route::get('/select-item/{id}', [PresentController::class, 'selectItem'])->name('present.select-item');
+        Route::post('/update-item', [PresentController::class, 'updateItem']);
+        Route::get('/customer-table/{id}', [PresentController::class, 'customerTable'])->name("present.customerTable");
+    });
 
+    Route::prefix('table-dia')->group(function () {
+        Route::get('/index', [TableDiaController::class, 'index'])->name('table-dia.index');
+        Route::get('/getBooking/{id}', [TableDiaController::class, 'getBookingByTableId']);
+        Route::get('/getInvoice/{id}', [TableDiaController::class, 'getInvoiceByTableId']);
+    });
+
+    Route::prefix('history')->group(function () {
+        Route::get('/index', [BookingHistoryController::class, 'index'])->name('booking-history.index');
+        Route::get('/detail/{id}', [BookingHistoryController::class, 'detail'])->name('booking-history.detail');
+    });
+});
+
+Route::prefix('invoice')->middleware('role')->group(function () {
+
+    Route::prefix('present')->group(function () {
+        Route::get('/index', [InvoiceController::class, 'index'])->name('inv-present.index');
+        Route::get('/create', [InvoiceController::class, 'create'])->name('inv-present.create');
+        Route::post('/store', [InvoiceController::class, 'store'])->name('inv-present.store');
+        Route::get('/table-arrangement/{id}', [InvoiceController::class, 'tableArrangement'])->name('inv-present.table');
+        Route::get('/post-arrangement/{id}/{table_id}', [InvoiceController::class, 'postArrangement'])->name('inv-post.table');
+        Route::post('/cancel/{id}', [InvoiceController::class, 'cancelInvoice'])->name("inv-present.cancelBooking");
+        Route::get('/select-item/{id}', [InvoiceController::class, 'selectItem'])->name('inv-present.select-item');
+        Route::post('/update-item', [InvoiceController::class, 'updateItem']);
+        Route::get('/get-invoice/{id}', [InvoiceController::class, 'getInvoice']);
+        Route::post('/pay-invoice/{id}', [InvoiceController::class, 'paymentInvoice']);
+        Route::get('/print/{id}', [InvoiceController::class, 'generatePDF'])->name('invoice.pdf');
+    });
+
+    Route::prefix('history')->group(function () {
+        Route::get('/index', [InvoiceHistoryController::class, 'index'])->name('invoice-history.index');
+        Route::get('/detail/{id}', [InvoiceHistoryController::class, 'detail'])->name('invoice-history.detail');
+    });
+});

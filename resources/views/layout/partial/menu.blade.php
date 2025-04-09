@@ -13,7 +13,7 @@
                                     <a href="{{ route("ft-item.index") }}">Thực đơn</a>
                                 </li>
                                 <li class="megamenu-holder">
-                                    <a href="javascript:void(0)">Đặt bàn</a>
+                                    <a href="{{ route("cart.index") }}">Đặt bàn</a>
                                 </li>
                                 <li class="drop-holder">
                                     <a href="{{ route("ft-blog.index") }}">Bài viết</a>                                   

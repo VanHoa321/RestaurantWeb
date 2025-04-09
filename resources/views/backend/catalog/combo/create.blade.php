@@ -67,6 +67,12 @@
                                                 </div> 
                                             </div>
                                             <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label>Mô tả thêm</label>
+                                                    <textarea class="form-control mb-3" name="description" placeholder="Nhập mô tả thêm" style="height: 70px">{{ old('description') }}</textarea>
+                                                </div> 
+                                            </div>
+                                            <div class="col-md-12">
                                                 <label>Mặt hàng</label>
                                                 <table id="example-table-3" class="table">
                                                     <thead>
@@ -237,6 +243,7 @@
                 var price = $("input[name='price']").val();
                 var cost_price = $("input[name='cost_price']").val();
                 var avatar = $("input[name='avatar']").val();
+                var description = $("textarea[name='description']").val();
                 var item_data = Object.keys(ids).map(itemId => ({
                     id: itemId,
                     quantity: ids[itemId].quantity
@@ -255,6 +262,7 @@
                         price: price,
                         cost_price: cost_price,
                         avatar: avatar,
+                        description: description,
                         items: item_data,
                         _token: $("meta[name='csrf-token']").attr("content")
                     },

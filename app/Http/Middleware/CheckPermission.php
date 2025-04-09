@@ -6,6 +6,7 @@ use App\Models\AdminMenu;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
 
 class CheckPermission
@@ -35,6 +36,7 @@ class CheckPermission
         }
 
         $parentMenuId = ($menu->parent == 0) ? $menu->id : $menu->parent;
+        
         if (!in_array($parentMenuId, $allowedMenus)) {
             $request->session()->put("messenge", ["style"=>"danger","msg"=>"Không đủ quyền truy cập hệ thống"]);
             return redirect()->route("login");

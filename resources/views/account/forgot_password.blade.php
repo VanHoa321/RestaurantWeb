@@ -27,13 +27,11 @@
             @endif
         @endif    
         @if ($errors->any())
-            <div style="position: fixed; top: 70px; right: 16px; width: auto; z-index: 999" id="myAlert">
-                @foreach ($errors->all() as $error)
-                    <div class="alert alert-danger" role="alert">
-                        <i class="bi bi-check2 text-danger"></i> {{ $error }}
-                    </div>
-                @endforeach
-            </div>
+            @foreach ($errors->all() as $error)
+                <div class="alert alert-danger" role="alert">
+                    <i class="bi bi-check2 text-danger"></i> {{ $error }}
+                </div>
+            @endforeach
         @endif
         <div class="card card-outline card-primary">            
             <div class="card-header text-center">

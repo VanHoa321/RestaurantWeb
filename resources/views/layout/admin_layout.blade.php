@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Restaurant</title>
+    <link rel="shortcut icon" href="{{ asset("/web/assets/favicon.png") }}">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
@@ -29,9 +30,6 @@
 
 <body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed">
     <div class="wrapper">
-        <!-- <div class="preloader flex-column justify-content-center align-items-center" style="z-index: 9999;">
-            <img class="animation__shake" src="{{asset("assets/dist/img/AdminLTELogo.png")}}" alt="AdminLTELogo" height="60" width="60">
-        </div> -->
         <nav class="main-header navbar navbar-expand navbar-white navbar-light">
             <ul class="navbar-nav">
                 <li class="nav-item">
@@ -126,7 +124,6 @@
         $(function() {
             $('#example-table').DataTable({
                 pageLength: 10,
-
                 scrollCollapse: true,
                 language: {
                     "lengthMenu": "Hiển thị _MENU_ mục",
@@ -187,6 +184,18 @@
                 language: {
                     "search": "Tìm kiếm:",
                     "zeroRecords": "Không tìm thấy mặt hàng liên quan"
+                }
+            });
+
+            $('#example-table-5').DataTable({
+                paging: false,
+                ordering: false,
+                searching: false,
+                info: false,
+                scrollY: "300px",
+                scrollCollapse: true,
+                language: {
+                    "zeroRecords": "Vui lòng chọn món ăn trước khi lưu lại <br> <i style='font-size:40px; margin-top:12px' class='fa-solid fa-pizza-slice'></i>"
                 }
             });
         });
